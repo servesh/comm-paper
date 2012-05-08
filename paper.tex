@@ -1,0 +1,118 @@
+% acmsmall-sample.tex, dated 4th Nov. 2011
+% This is a sample file for ACM small trim journals
+%
+% Compilation using 'acmsmall.cls' - version 1.2, Aptara Inc.
+% (c) 2010 Association for Computing Machinery (ACM)
+%
+% Questions/Suggestions/Feedback should be addressed to => "acmtexsupport@aptaracorp.com".
+% Users can also go through the FAQs available on the journal's submission webpage.
+%
+% Steps to compile: latex, bibtex, latex latex
+%
+% For tracking purposes => this is v1.2 - Nov. 2011
+
+\documentclass[prodmode,acmtaco]{acmsmall}
+
+% Package to generate and customize Algorithm as per ACM style
+\usepackage[ruled]{algorithm2e}
+\renewcommand{\algorithmcfname}{ALGORITHM}
+\SetAlFnt{\small}
+\SetAlCapFnt{\small}
+\SetAlCapNameFnt{\small}
+\SetAlCapHSkip{0pt}
+\IncMargin{-\parindent}
+
+% Metadata Information
+\acmVolume{9}
+\acmNumber{4}
+\acmArticle{39}
+\acmYear{2010}
+\acmMonth{3}
+
+% Document starts
+\begin{document}
+
+% Page heads
+\markboth{S. Muralidharan et al.}{Title goes here}
+
+% Title portion
+\title{Title goes here}
+\author{
+SERVESH MURALIDHARAN
+\affil{Trinity College Dublin}
+DAVID GREGG
+\affil{Trinity College Dublin}}
+
+\begin{abstract}
+
+Abstract goes here
+
+\end{abstract}
+
+\category{C.2.2}{Computer-Communication Networks}{Network Protocols}
+
+\terms{Design, Algorithms, Performance}
+
+\keywords{}
+
+\acmformat{Muralidharan, S., and Gregg, D.,  2012. Title goes here.}
+
+\begin{bottomstuff}
+This work is funded by the IRCSET Enterprise Partnership Scheme along with IBM Research Ireland.
+
+Author's addresses: S. Muralidharan {and} D. Gregg, Computer Science Department,
+Trinity College Dublin, Ireland.
+\end{bottomstuff}
+
+\maketitle
+
+\section{Introduction}
+
+The constant advancement in server hardware has made systems with large number of hardware threads[] readily available. In addition to this the presence of co-processors[], network processors[], Graphics Processing Units ( GPUs ) \& General Purpose GPUs ( GPGPUs ) has dramatically improved the capability of commodity hardware. These developments has paved way to a platform with immense computing potential which existing applications already take advantage of. Along with the improvements in the Multi-Core \& Many-Core processor architecture the memory and I/O speeds have also seen significant improvement. In particular the network subsystem has seen significant growth, in combination with the improvements to optical communication it has lead to 10GbE interfaces being quite common in enterprise servers. While 40GbE and 100GbE are available for backbone infrastructure but would eventually follow into commodity hardware. 
+
+Several previous work have discussed the process of parallelizing network applications[][][] to enable it to run faster in such multi threaded systems. The development of Software routers[][][] is encouraged further because it costs only a fraction of the commodity hardware routers. It has been shown that such routers can be used to process packets at line rate [][][] which has been a challenge on its own. Network applications including those that operate on few or all of the network layers have been designed with sequential processing as the target environment. The shift to multi core architectures in recent times has induced such applications to utilize parallel processing as a alternate means of computing. While this could lead to significant improvement in performance it also suffers from the same problems as any parallel application. These include scalability, load-balancing, data dependency and the presence of non parallel regions in the program apart from those that might arise due to that specific application. The scaling of software routers has been discussed extensively in RouteBricks[] which shows the problems suffered by software routers when they are scaled beyond a single system. One could argue that complexity of network applications such as Deep Packet Inspection ( DPI ), Packet Forwarding, etc., could be handled by a single many socket Multi-Core SMP system. However, as the complexity of network applications develops it would be inevitable but to move to a multi node environment in order to perform the computations and to handle more network bandwidth.
+
+Large scale computing clusters has been used in high-performance scientific application to solve problems and applications of very large size. It uses a cluster of compute nodes and distributes the workload across them in order to solve it faster. These systems utilize parallel programs consisting of both threads and MPI to break massive problems into smaller workload that can be executed in parallel. In addition, the presence of GPUs and GPGPUs requires a mixture of parallelization constructs such as OpenCL, CUDA, etc., in order to achieve the best performance in the system. In this paper we discuss how some of the techniques used by these applications could be used to parallelize network applications.
+
+Click Modular Software Router[] consists of extensive elements which are used to construct software routers. Click primarily targets packet processing applications and contains an extensive 
+
+Discuss about what each sections contains here.....  
+
+\section{Background}
+
+Talk about click...
+
+\section{Design}
+
+Emphasize on user level execution environment
+
+Eliminate the overhead associated with creation of dynamic objects and virtual function calls at run time
+
+Optimize the code generated for a particular application graph
+
+Eliminate the dependency of creating queue elements to implement task parallelism
+
+Eliminate the creation of multiple graphs to implement data parallelism
+
+\section{Implementation}
+
+\section{Experimental Evaluation}
+
+\section{Related Work}
+
+\section{Conclusions}
+
+% Acknowledgments
+\begin{acks}
+The authors would like to thank ...
+\end{acks}
+
+% Bibliography
+\bibliographystyle{acmsmall}
+\bibliography{}
+
+% History dates
+\received{June 2012}
+
+\end{document}
+
