@@ -112,7 +112,7 @@
 
 % *** CITATION PACKAGES ***
 %
-%\usepackage{cite}
+\usepackage{cite}
 % cite.sty was written by Donald Arseneau
 % V1.6 and later of IEEEtran pre-defines the format of the cite.sty package
 % \cite{} output to follow that of IEEE. Loading the cite package will
@@ -136,12 +136,12 @@
 % *** GRAPHICS RELATED PACKAGES ***
 %
 \ifCLASSINFOpdf
-  % \usepackage[pdftex]{graphicx}
+  \usepackage[pdftex]{graphicx}
   % declare the path(s) where your graphic files are
-  % \graphicspath{{../pdf/}{../jpeg/}}
+  \graphicspath{{./eps/}}
   % and their extensions so you won't have to specify these with
   % every instance of \includegraphics
-  % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+  \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
 \else
   % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
   % will default to the driver specified in the system graphics.cfg if no
@@ -284,7 +284,7 @@
 % IEEEtran.cls handing of captions. Version 1.3 (2005/06/28) and later 
 % (recommended due to many improvements over 1.2) of subfig.sty supports
 % the caption=false option directly:
-%\usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage[caption=false,font=footnotesize]{subfig}
 %
 % The latest version and documentation can be obtained at:
 % http://www.ctan.org/tex-archive/macros/latex/contrib/subfig/
@@ -454,19 +454,42 @@ The focus of this paper is the development of a parallel processing engine that 
 
 \end{itemize} 
 
-We concentrate more on the framework that can integrate the packet processing and application tasks into a parallel processing engine and the extraction of parallelism from the packet processing related tasks to improve the overall performance. Given an application graph and its partition consisting of parallel tasks we the combine it with the packet processing operations. In addition, Section \ref{sec:} we show the challeneges involved in using a system consisting of threads and process that are used to actually perform the work. The extent to which we extract parallelism ranges not only to the packet tasks but to the low level access of data I/O to the network interface hardware through certain additions to the netmap APIs. Finally in Section \ref{sec: } we present certain pseudo applications that involves operations such as compression and encryption to evaluate our parallel processing engine. 
+We concentrate more on the framework that can integrate the packet processing and application tasks into a parallel processing engine and the extraction of parallelism from the packet processing related tasks to improve the overall performance. Given an application graph and its partition consisting of parallel tasks we then combine it with the packet processing operations. In addition, Section \ref{sec:} we show the challenges involved in using a system consisting of threads and process that are used to actually perform the work. The extent to which we extract parallelism ranges not only to the packet tasks but to the low level access of data I/O to the network interface hardware through certain additions to the netmap APIs. Finally in Section \ref{sec: } we present certain pseudo applications that involves operations such as compression and encryption to evaluate our parallel processing engine. 
  
 \section{Background}
 
+Let us consider a simple file storage system that is based in a data center. The application handles sensitive information by performing encryption on the data that matches predefined rules like file names, access level of user, etc., otherwise the default operation is to perform compression and store the information in the location specified. For the purpose of this example let us assume that the filesystem is located on a NFS server and it is responsible for concurrent operations on the data. A group of servers act as the interface to the storage system and the requests are evenly distributed over these nodes. The important operations that these nodes perform on the data are represented in the stream graph shown in figure \ref{fig1}. In the data retrieval part the information fetched from the filesystem is checked to see if it matches a set of predefined rules to check if it has to be encrypted otherwise passes it to the compression operation. During data storage the input data is checked whether it has to be decrypted or decompressed and then stored on to the filesystem.
 
-An important part of our system is the tasks related to packets such as routing, forwarding, etc., Since our design focuses more on the aspects of the parallel framework we utilize the click modular router for the packet processing tasks. Click modular router \cite{click} is a commonly used software router that includes a library of elements which is used in building flexible and reconfigurable routers. It offers a platform that is flexible for rapid development of newer network protocols and achieves good performance. An improved version known as SMP Click \cite{smpclick} also supports thread based parallel processing of network related tasks. Until recently click's performance in the user space was not as good as its kernel space equivalent. This is mainly due to its extensive use of polling driver in the kernel space. Netmap I/O \cite{netmap} provides a set of APIs that could directly access the packets from the NIC and it helped in the recent improvement of click's user space performance.     
+\begin{figure}[ht]
+\centering
+\subfigure
+{
+	\includegraphics[width=3.5in]{ip-data-proc}
+	\label{fig1.1}
+}
+
+\subfigure
+{
+	\includegraphics[width=3in]{op-data-proc}
+	\label{fig1.2}
+}
+\caption{Operations performed on the data stored and retrieved}
+\label{fig1}
+\end{figure}
+
+The nodes that are connected in the cluster are linked through a switch or router. In such a scenario the number of routers increase with the size of the cluster and the bandwidth required by the application. Due to this the performance of the application is directly dependent on the network especially the functionality of the routers. Moreover with a fixed infrastructure such as this it is not only difficult to upgrade the routers but it would also be a expensive proposition. In such a situation it makes more sense to use software routers which are much more flexible and cheaper and could prove to be a more effective than or in addition to commercial switches or routers.
+
+In implementing the software routers if one were to dedicate several nodes for this purpose it might prove to be inefficient use of resources since the network traffic generated is highly dependent on the applications being executed in such a closed environment. Moreover such systems might act as a communication bottleneck and the routing operations are focused on these nodes. A more effective approach would be to bring the software routers into the nodes that are used for executing the applications itself. In doing this we dedicate a specific set of resources of each node for the packet processing operations and in essence make each node act as a router. All the nodes in such a cluster are connected with each other based on network topology suitable for its requirements. This would make it possible to divide the workload generated due to the network operations across all the nodes in the cluster. In this paper we propose such a system that not only brings the software routers as separate entity into the actual application nodes but takes it a step further and integrates the network operations with the application itself. 
+
+There are several challenges arises due to this mainly how do we tackle such large number of computations both from the application and the network effectively. Two important constraints would enable us to satisfy the requirements posed by such a system. First, the operations of both the application and the network is parallel in nature and second, the presence of co-processors[], network processors[], Graphics Processing Units ( GPUs ) \& General Purpose GPUs ( GPGPUs ) has dramatically improved the capability of commodity hardware. With this theoretically, we should be able to meet the computational demand but if such a system were to succeed an efficient parallel processing engine is crucial.\\
+
+\textit{write a para forward referencing other sections}\\
+
+An important part of our system is the tasks related to packets such as routing, forwarding, etc., Since our design focuses more on the aspects of the parallel framework we utilize the click modular router for the packet processing tasks. Click modular router \cite{click} is a commonly used software router that includes a library of elements which is used in building flexible and reconfigurable routers. It offers a platform that is flexible for rapid development of newer network protocols and achieves good performance. An improved version known as SMP Click \cite{smpclick} also supports thread based parallel processing of network related tasks. Until recently click's performance in the user space was not as good as its kernel space equivalent. This is mainly due to its extensive use of polling driver in the kernel space. Netmap I/O \cite{netmap} provides a set of APIs that could directly access the packets from the NIC and it helped in the recent improvement of click's user space performance. We found the simpler construction of netmap easier to adapt to our framework  compared to other user space packet access APIs.   
 
 Click dynamically constructs routers in which the configuration file is passed as a parameter for the kernel module or user space binary. As a result most of the actual components are dynamically allocated and connected at run time. While this may be an advantage considering the alternate is to recompile the linux kernel, it does act as significant bottleneck in the case of user space. Moreover some of the restrictions on how the configuration can be parallelized limits the actual performance that could be achieved in combination with netmap. By integrating the ability to access click's elements within our parallel processing engine we were able to scale significantly better. This does require a limited amount of modifications to some of click's libraries and elements. In generating the actual code statically, compilers such as gnu c, etc., can perform optimizations such as loop fusions, in-lining, dead code optimization etc., which were not possible previously.
 
-Our framework primarily focuses on user space and netmap APIs forms a crucial part in this.
-
-
-\section{Background}
+\section{Old Background}
 
 The constant advancement in server hardware has made systems with large number of hardware threads[] readily available. In addition to this the presence of co-processors[], network processors[], Graphics Processing Units ( GPUs ) \& General Purpose GPUs ( GPGPUs ) has dramatically improved the capability of commodity hardware. These developments has paved way to a platform with immense computing potential which existing applications already take advantage of. Along with the improvements in the Multi-Core \& Many-Core processor architecture the memory and I/O speeds have also seen significant improvement. In particular the network subsystem has seen significant growth, in combination with the improvements to optical communication it has lead to 10GbE interfaces being quite common in enterprise servers. While 40GbE and 100GbE are available for backbone infrastructure but would eventually follow into commodity hardware. 
 
@@ -479,12 +502,6 @@ Large scale computing clusters has been used in high-performance scientific appl
 Click Modular Software Router[] consists of extensive elements which are used to construct software routers. Click primarily targets packet processing applications especially those that operate on L4 - L7. \{elaborate more here\}
 
 Discuss about what each sections contains here.....  
-
-\section{Background}
-
-Talk about click...\\
-
-Describe about what would be the best way to parallelize using threads and MPI.. provide reference.. \\ 
 
 \section{Design}
 
@@ -647,9 +664,9 @@ This work is funded by the IRCSET Enterprise Partnership Scheme along with IBM R
 % <OR> manually copy in the resultant .bbl file
 % set second argument of \begin to the number of references
 % (used to reserve space for the reference number labels box)
-\begin{thebibliography}{1}
+%\begin{thebibliography}{1}
 
-\end{thebibliography}
+%\end{thebibliography}
 
 
 % that's all folks
