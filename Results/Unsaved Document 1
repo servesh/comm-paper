@@ -1,0 +1,131 @@
+Compression: Total_Uncompressed_Size = 640000000bytes, Total_Compressed_Size = 586160118bytes
+Sent 5000000 packets, 128bytes each, in 71.8594 seconds
+Speed: 69.58Kpps. Bandwidth: 71.25Mbps.
+
+Decompression: Total_compressed_Size = 586160118bytes, Total_uncompressed_Size = 640000000bytes, Success = 5000000 fail = 0
+Overall: Received 5000000 packets, 128bytes each, on avg 72.4615sec Speed:69.00Kpps. BW:70.66Mbps
+
+
+Compression: Total_Uncompressed_Size = 320000000bytes, Total_Compressed_Size = 293080401bytes Processed 2500000 packets x2
+Sent 5000000 packets, 128bytes each, in 35.72 seconds
+Speed: 139.98Kpps. Bandwidth: 143.34Mbps.
+
+Decompression: Total_compressed_Size = 586160802bytes, Total_uncompressed_Size = 640000000bytes, Success = 5000000 fail = 0
+Overall: Received 5000000 packets, 128bytes each, on avg 36.3649sec Speed:137.50Kpps. BW:140.80Mbps
+
+
+Compression: Total_Uncompressed_Size = 160000000bytes, Total_Compressed_Size = 146541823bytes Processed 1250000 packets x4
+Sent 5000000 packets, 128bytes each, in 18.714 seconds
+Speed: 267.18Kpps. Bandwidth: 273.59Mbps.
+
+Decompression: Total_compressed_Size = 586167292bytes, Total_uncompressed_Size = 640000000bytes, Success = 5000000 fail = 0
+Overall: Received 5000000 packets, 128bytes each, on avg 19.3807sec Speed:257.99Kpps. BW:264.18Mbps
+
+
+Compression: Total_Uncompressed_Size = 106666624bytes, Total_Compressed_Size = 97693577bytes Processed 833333 packets x6
+Sent 5000000 packets, 128bytes each, in 17.7441 seconds
+Speed: 281.78Kpps. Bandwidth: 288.55Mbps.
+
+Decompression: Total_compressed_Size = 586161462bytes, Total_uncompressed_Size = 639999744bytes, Success = 4999998 fail = 0
+Overall: Received 4999998 packets, 128bytes each, on avg 18.4260sec Speed:271.36Kpps. BW:277.87Mbps
+
+
+Compression: Total_Uncompressed_Size = 640000000bytes, Total_Compressed_Size = 586161555bytes
+Sent 5000000 packets, 128bytes each, in 72.3648 seconds
+Speed: 69.09Kpps. Bandwidth: 70.75Mbps.
+
+Decompression: Total_compressed_Size = 292956065bytes, Total_uncompressed_Size = 319863040bytes, Success = 2498930 fail = 0
+Decompression: Total_compressed_Size = 293205490bytes, Total_uncompressed_Size = 320136960bytes, Success = 2501070 fail = 0
+Overall: Received 5000000 packets, 128bytes each, on avg 72.9584sec Speed:68.53Kpps. BW:70.18Mbps
+
+
+Compression: Total_Uncompressed_Size = 320000000bytes, Total_Compressed_Size = 293079513bytes x2
+Sent 5000000 packets, 128bytes each, in 36.3919 seconds
+Speed: 137.39Kpps. Bandwidth: 140.69Mbps.
+
+Decompression: Total_compressed_Size = 293093716bytes, Total_uncompressed_Size = 320015104bytes, Success = 2500118 fail = 0
+Decompression: Total_compressed_Size = 293065310bytes, Total_uncompressed_Size = 319984896bytes, Success = 2499882 fail = 0
+Overall: Received 5000000 packets, 128bytes each, on avg 37.0350sec Speed:135.01Kpps. BW:138.25Mbps
+
+
+Compression: Total_Uncompressed_Size = 160000000bytes, Total_Compressed_Size = 146541842bytes x4
+Sent 5000000 packets, 128bytes each, in 18.8688 seconds
+Speed: 264.99Kpps. Bandwidth: 271.35Mbps.
+
+Decompression: Total_compressed_Size = 293582956bytes, Total_uncompressed_Size = 320546816bytes, Success = 2504272 fail = 0
+Decompression: Total_compressed_Size = 292584412bytes, Total_uncompressed_Size = 319453184bytes, Success = 2495728 fail = 0
+Overall: Received 5000000 packets, 128bytes each, on avg 19.5356sec Speed:255.94Kpps. BW:262.09Mbps
+
+
+Compression: Total_Uncompressed_Size = 106666624bytes, Total_Compressed_Size = 97693118bytes Processed 833333 packets x6
+Sent 5000000 packets, 128bytes each, in 12.6614 seconds
+Speed: 394.90Kpps. Bandwidth: 404.38Mbps.
+
+Decompression: Total_compressed_Size = 292814178bytes, Total_uncompressed_Size = 319709184bytes, Success = 2497728 fail = 0
+Decompression: Total_compressed_Size = 293344530bytes, Total_uncompressed_Size = 320290560bytes, Success = 2502270 fail = 0
+Overall: Received 4999998 packets, 128bytes each, on avg 13.3390sec Speed:374.84Kpps. BW:383.84Mbps
+
+
+Compression: Total_Uncompressed_Size = 80000000bytes, Total_Compressed_Size = 73270353bytes Processed 625000 packets x8
+Sent 5000000 packets, 128bytes each, in 16.4443 seconds
+Speed: 304.06Kpps. Bandwidth: 311.35Mbps.
+
+Decompression: Total_compressed_Size = 293375848bytes, Total_uncompressed_Size = 320321536bytes, Success = 2502512 fail = 0
+Decompression: Total_compressed_Size = 292786976bytes, Total_uncompressed_Size = 319678464bytes, Success = 2497488 fail = 0
+Overall: Received 5000000 packets, 128bytes each, on avg 17.1164sec Speed:292.12Kpps. BW:299.13Mbps
+
+
+Compression: Total_Uncompressed_Size = 640000000bytes, Total_Compressed_Size = 586162534bytes
+Sent 5000000 packets, 128bytes each, in 71.9677 seconds
+Speed: 69.48Kpps. Bandwidth: 71.14Mbps.
+
+Decompression: Total_compressed_Size = 146536162bytes, Total_uncompressed_Size = 159995136bytes, Success = 1249962 fail = 0
+Decompression: Total_compressed_Size = 146715818bytes, Total_uncompressed_Size = 160191360bytes, Success = 1251495 fail = 0
+Decompression: Total_compressed_Size = 146454064bytes, Total_uncompressed_Size = 159904896bytes, Success = 1249257 fail = 0
+Decompression: Total_compressed_Size = 146456490bytes, Total_uncompressed_Size = 159908608bytes, Success = 1249286 fail = 0
+Overall: Received 5000000 packets, 128bytes each, on avg 72.5571sec Speed:68.91Kpps. BW:70.57Mbps
+
+
+Compression: Total_Uncompressed_Size = 320000000bytes, Total_Compressed_Size = 293082362bytes x2
+Sent 5000000 packets, 128bytes each, in 36.431 seconds
+Speed: 137.25Kpps. Bandwidth: 140.54Mbps.
+
+Decompression: Total_compressed_Size = 146476034bytes, Total_uncompressed_Size = 159928832bytes, Success = 1249444 fail = 0
+Decompression: Total_compressed_Size = 146841544bytes, Total_uncompressed_Size = 160326912bytes, Success = 1252554 fail = 0
+Decompression: Total_compressed_Size = 146328676bytes, Total_uncompressed_Size = 159768320bytes, Success = 1248190 fail = 0
+Decompression: Total_compressed_Size = 146518470bytes, Total_uncompressed_Size = 159975936bytes, Success = 1249812 fail = 0
+Overall: Received 5000000 packets, 128bytes each, on avg 37.0685sec Speed:134.89Kpps. BW:138.12Mbps
+
+
+Compression: Total_Uncompressed_Size = 160000000bytes, Total_Compressed_Size = 146538504bytes x4
+Sent 5000000 packets, 128bytes each, in 18.8135 seconds
+Speed: 265.77Kpps. Bandwidth: 272.14Mbps.
+
+Decompression: Total_compressed_Size = 146936056bytes, Total_uncompressed_Size = 160433152bytes, Success = 1253384 fail = 0
+Decompression: Total_compressed_Size = 146488940bytes, Total_uncompressed_Size = 159948800bytes, Success = 1249600 fail = 0
+Decompression: Total_compressed_Size = 146163216bytes, Total_uncompressed_Size = 159589376bytes, Success = 1246792 fail = 0
+Decompression: Total_compressed_Size = 146565804bytes, Total_uncompressed_Size = 160028672bytes, Success = 1250224 fail = 0
+Overall: Received 5000000 packets, 128bytes each, on avg 19.4793sec Speed:256.68Kpps. BW:262.84Mbps
+
+
+Compression: Total_Uncompressed_Size = 106666624bytes, Total_Compressed_Size = 97693327bytes x6
+Sent 5000000 packets, 128bytes each, in 13.1676 seconds
+Speed: 379.72Kpps. Bandwidth: 388.83Mbps.
+
+Decompression: Total_compressed_Size = 146848656bytes, Total_uncompressed_Size = 160338432bytes, Success = 1252644 fail = 0
+Decompression: Total_compressed_Size = 146344380bytes, Total_uncompressed_Size = 159784704bytes, Success = 1248318 fail = 0
+Decompression: Total_compressed_Size = 146650752bytes, Total_uncompressed_Size = 160119552bytes, Success = 1250934 fail = 0
+Decompression: Total_compressed_Size = 146316174bytes, Total_uncompressed_Size = 159757056bytes, Success = 1248102 fail = 0
+Overall: Received 4999998 packets, 128bytes each, on avg 13.8495sec Speed:361.02Kpps. BW:369.69Mbps
+
+
+Compression: Total_Uncompressed_Size = 80000000bytes, Total_Compressed_Size = 73270983bytes x8
+Sent 5000000 packets, 128bytes each, in 16.3962 seconds
+Speed: 304.95Kpps. Bandwidth: 312.27Mbps.
+
+Decompression: Total_compressed_Size = 146118072bytes, Total_uncompressed_Size = 159535104bytes, Success = 1246368 fail = 0
+Decompression: Total_compressed_Size = 146768768bytes, Total_uncompressed_Size = 160246784bytes, Success = 1251928 fail = 0
+Decompression: Total_compressed_Size = 146476224bytes, Total_uncompressed_Size = 159930368bytes, Success = 1249456 fail = 0
+Decompression: Total_compressed_Size = 146804800bytes, Total_uncompressed_Size = 160287744bytes, Success = 1252248 fail = 0
+Overall: Received 5000000 packets, 128bytes each, on avg 16.7222sec Speed:299.00Kpps. BW:306.18Mbps
+

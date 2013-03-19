@@ -1,4 +1,7 @@
 *.log
 *.aux
+*.blg
+*.bbl
+paper.pdf
 *~
 IEEEtran_*
