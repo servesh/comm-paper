@@ -63,25 +63,13 @@
 % should be used if it is desired that the figures are to be displayed in
 % draft mode.
 %
-\documentclass[conference]{IEEEtran}
-%% INFOCOM 2013 addition:
-\makeatletter
-\def\ps@headings{%
-\def\@oddhead{\mbox{}\scriptsize\rightmark \hfil \thepage}%
-\def\@evenhead{\scriptsize\thepage \hfil \leftmark\mbox{}}%
-\def\@oddfoot{}%
-\def\@evenfoot{}}
-\makeatother
-\pagestyle{headings}
+\documentclass[10pt, conference, compsocconf, reqno]{IEEEtran}
+
 % Add the compsoc option for Computer Society conferences.
 %
 % If IEEEtran.cls has not been installed into the LaTeX system files,
 % manually specify the path to it like:
 % \documentclass[conference]{../sty/IEEEtran}
-
-
-
-
 
 % Some very useful LaTeX packages include:
 % (uncomment the ones you want to load)
@@ -391,30 +379,78 @@
 \newcommand{\INDSTATE}[1][1]{\STATE\hspace{#1\algorithmicindent}}
 \newcommand{\comment}[1]{}
 
+%squeeze
+
+\renewcommand{\arraystretch}{1}
+
+\renewcommand\floatpagefraction{.9}
+\renewcommand\topfraction{.9}
+\renewcommand\bottomfraction{.9}
+\renewcommand\textfraction{.1}
+\setcounter{totalnumber}{50}
+\setcounter{topnumber}{50}
+\setcounter{bottomnumber}{50}
+
+\raggedbottom
+
+\addtolength{\floatsep}{-5mm}
+\addtolength{\textfloatsep}{-3mm}
+%~ \addtolength{\intextsep}{-2mm}
+\addtolength{\dbltextfloatsep}{-2mm}
+\addtolength{\dblfloatsep}{-1mm}
+\addtolength{\abovecaptionskip}{-1mm}
+\addtolength{\belowcaptionskip}{-1mm}
+\addtolength{\abovedisplayskip}{-3mm}
+\addtolength{\belowdisplayskip}{-3mm}
+\addtolength{\arraycolsep}{-1mm}
+
+\let\oldthebibliography=\thebibliography
+\let\endoldthebibliography=\endthebibliography
+\renewenvironment{thebibliography}[1]{%
+  \begin{oldthebibliography}{#1}%
+    \setlength{\parskip}{0.2ex}%
+    \setlength{\itemsep}{0.2ex}%
+}%
+{%
+  \end{oldthebibliography}%
+}
+
+\captionsetup{justification=centering}
+
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
-
 
 \begin{document}
 %
 % paper title
 % can use linebreaks \\ within to get better formatting as desired
-\title{A high-level programming framework to support parallel processing of communication intensive \\ stream applications}
+\title{A parallel runtime framework for communication intensive stream applications}
 
 % author names and affiliations
 % use a multiple column layout for up to three different
 % affiliations
-\author{\IEEEauthorblockN{Servesh Muralidharan}
-\IEEEauthorblockA{School of Computer Science and\\Statistics\\
-Trinity College Dublin\\
-Dublin 2, Ireland\\
-Email: muralis@tcd.ie}
-\and
-\IEEEauthorblockN{David Gregg}
-\IEEEauthorblockA{School of Computer Science and\\Statistics\\
-Trinity College Dublin\\
-Dublin 2, Ireland\\
-Email: David.Gregg@cs.tcd.ie}}
+\author{\IEEEauthorblockN{Servesh Muralidharan\IEEEauthorrefmark{2},
+Kevin Casey\IEEEauthorrefmark{4}
+and
+David Gregg\IEEEauthorrefmark{2}}
+\IEEEauthorblockA{\IEEEauthorrefmark{2}School of Computer Science and Statistics,
+Trinity College Dublin, Dublin 2, Ireland\\
+Email: muralis@scss.tcd.ie, David.Gregg.cs.tcd.ie }
+\IEEEauthorblockA{\IEEEauthorrefmark{4}DCU\\
+Email: }
+}
+%~
+%~ \author{\IEEEauthorblockN{Servesh Muralidharan}
+%~ \IEEEauthorblockA{School of Computer Science and\\Statistics\\
+%~ Trinity College Dublin\\
+%~ Dublin 2, Ireland\\
+%~ Email: muralis@tcd.ie}
+%~ \and
+%~ \IEEEauthorblockN{David Gregg}
+%~ \IEEEauthorblockA{School of Computer Science and\\Statistics\\
+%~ Trinity College Dublin\\
+%~ Dublin 2, Ireland\\
+%~ Email: David.Gregg@cs.tcd.ie}}
 
 % conference papers do not typically use \thanks and this command
 % is locked out in conference mode. If really needed, such as for
@@ -443,21 +479,19 @@ Email: David.Gregg@cs.tcd.ie}}
 %\IEEEspecialpapernotice{(Invited Paper)}
 
 
-
-
 % make the title area
 \maketitle
 
 
 \begin{abstract}
 %\boldmath
-Stream applications are often limited in their performance by their underlying communication system. In a typical implementation, the Operating System (OS) handles the majority of network operations. In such cases, the communication stack, which was not designed to handle such tremendous amounts of data, acts as a bottleneck and restricts the performance of the application. Therefore, a framework for computing and communicating in parallel is essential for improving performance.
+Stream applications are often limited in their performance by their underlying communication system. In a typical implementation, the underlying communication relies on operating system to handle majority of the network operations. In such cases, the communication stack, which was not designed to handle such tremendous amounts of data, acts as a bottleneck and restricts the performance of the application.
 
-We propose a high-level programming framework that integrates the packet processing operations with stream applications, and provides a common interface to execute both application and packet processing operations in parallel on multicore processors.
+In this paper, we propose a parallel runtime framework that integrates the communication operations with stream applications, and provides a common parallel processing engine that can execute both the communication and computation operations in parallel on multicore processors.
 
-We utilize the ability of the network interface controller (NIC) to classify packets onto multiple hardware queues. This is combined with system software that allows direct access to these queues. We develop an interface in our framework for application processes to read or write in parallel. Our system integrates this with the application by a series of packet processing operations that transform the data from the application to packets suitable for transmission. Representing these tasks as stages in the application, we are able to parallelize them using techniques similar to those used for parallelizing regular computations.
+Our runtime system does this by using a series of communication filters that transform the data from the application to packets suitable for transmission. These communication filters are built using system software that allows direct access to network hardware. We also utilize the ability of the modern network controller to classify packets onto multiple hardware queues by integrating it with the communication filter. Using this our runtime framework is able to construct a unified stream graph based on the application graph provided. This when used with a static schedule based on a given architecture, can process the data streams in parallel.
 
-All the communication operations in the framework are performed in userspace, bypassing the OS, to send and receive data directly over the network interface. By overcoming the OS bottleneck, and by parallelizing computations and packet operations together, we are able to boost the performance of stream applications substantially.
+We are able to parallelize the stream application and achieve speedups of more than a factor of eight in all the applications we tested. The results show that our system scales to as many as 24 parallel processes on a multicore computer, and achieves speedups of more than a factor of ten in some cases compared to sequential implementations.
 
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
@@ -479,26 +513,29 @@ All the communication operations in the framework are performed in userspace, by
 % For peerreview papers, this IEEEtran command inserts a page break and
 % creates the second title. It will be ignored for other modes.
 \IEEEpeerreviewmaketitle
-%Kevin - vertical spacing
-\setlength{\textfloatsep}{15pt}
+%Kevin - vertical spacing % Servesh - Fixed it on global command
+%\setlength{\textfloatsep}{15pt}
 \section{Motivation}
 
-Stream applications are designed in a manner where they operate on data that flows as a \textit{stream}. This data stream passes through different stages of computations, to be transformed from query to result \cite{Thies:2002:SLS:647478.727935} \cite{Halbwachs91thesynchronous} \cite{Stephens95asurvey}. This differs from a conventional computation model where data is stored and then processed. By eliminating the need to store data, and processing it on the go instead, it is possible for stream applications to process large amounts of data.
+Applications that follow streaming model~\cite{Thies:2002:SLS:647478.727935,Halbwachs91thesynchronous,Stephens95asurvey,muthukrishnan2005data} are expressed as a set of filters that operate on one or more tokens of data. The flow of these data tokens through the filters is referred to as a \textit{stream}. Since the data is accessed sequentially in the form of a stream the memory requirement to process the data is considerably less compared to the size of the enitre stream, thereby making it possible to operate on very large data sizes. Typical applications based on this model operate on data ranges in the order of terabytes or even bigger. Applications such as financial trading systems~\cite{agarwal2009faster}, database systems~\cite{Golab03datastream}, network data analysis~\cite{Gilbert01quicksand:quick,Sullivan:1998:TSM:1268256.1268258} are few examples that follow the streaming model and operate on very large data sets.
 
-Stream applications such as file storage systems, database query management, data mining, etc., operating on vast amounts of data, are often distributed over multiple systems. Traditional stream applications target multicore processors for performing their computations in parallel. As multicore processors grow in power, so do stream applications, processing ever-increasing amounts of data. However, stream applications that operate on large amounts of data at a very high bandwidth can be limited by the communication stack of the OS kernel\cite{Wu:2007:PPB:1323954.1323957}\cite{Wu:2007:PAL:1227865.1228021}\cite{Dobrescu09routebricks:exploiting}\cite{Han:2010:PGS:1851275.1851207}\cite{Kohler2000}. With the continuing improvement of multicore and many-core architectures, it is becoming essential to improve the processing speeds of packet operations along with those of the application in order to scale performance.
-\comment{
-When performing packet processing operations for communication intensive stream applications, a major challenge is the high levels of performance required. These applications process large numbers of data streams in real time.  If the communication system cannot keep up with the rate at which packets arrive, then they must be dropped or remain unprocessed.
-}
+Traditional stream applications target multicore processors for performing their computations in parallel. As multicore processors grow in size, so do stream applications, processing more streams of data in parallel. However, in such cases the applications are typically limited by the traditional communication systems~\cite{Wu:2007:PPB:1323954.1323957,Wu:2007:PAL:1227865.1228021,Dobrescu09routebricks:exploiting,Han:2010:PGS:1851275.1851207,Kohler2000}. The reason being these systems have limited support for operating on parallel streams and are burdened by abstraction layers that provide compatibility for non-streaming applications.
 
-In building a framework for such applications on general purpose computers, we can exploit two hardware features that could allow for dramatically improved performance, namely multicore processors and multi queue network controllers. Using these features makes it possible to do much of the packet processing in parallel using the multiple cores commonly available on modern processors.
-
-A major bottleneck for packet processing on general purpose computers is the overhead of the operating system's network stack. In particular, for applications that run as user processes, data must be copied between OS kernel space and user space. Previous research uses alternate mechanisms to access packets from the network hardware directly to overcome this problem\cite{Dobrescu09routebricks:exploiting}\cite{Han:2010:PGS:1851275.1851207}\cite{Kohler2000}. Most of these use modern network hardware in combination with particular system software that allows direct access to hardware-controlled packet queues, dramatically reducing overheads and improving performance. However, constructing stream applications that use these features is difficult. Furthermore, many stream applications have a very specific communication pattern, typically operating on data between a source and sink in the form of a \textit{data stream}. Data in a stream must be processed sequentially, whereas those from separate streams can often be processed in parallel.
-
-Modern network hardware typically has a mechanism for separating arriving packets into multiple queues, where packets that belong to the same flow are\comment{ guaranteed to be} placed in the same queue\cite{micro2008} \cite{intel2010}. We can utilize this feature to operate on multiple streams of data by processing each of the queues in parallel. However, building such applications is complex because it requires explicit parallel programming and interaction with low-level network interfaces. Research focuses on improving the performance of network applications by parallelizing the packet processing tasks on multicore architectures \cite{Dobrescu09routebricks:exploiting} \cite{Han:2010:PGS:1851275.1851207}. We parallelize both the application and packet operations to gain significant improvement in performance.
+Several high speed networks~\cite{fredj2011survey} exists that could handle such communication requirements but these require expensive hardware and specialized programming skills. Commodity network adapters based on 10-gigabit ethernet (10GbE) are comparatively cheaper alternative and are being widely deployed in clusters and grids in data centers. Previous research\cite{Romanow03anoverview,Feng:2003:OEN:1048935.1050200} have been done on optimizing ethernet for improving communication in such cases. However, they do not use many of the features provided by modern day network adapters such as hardware queues, flow control, etc., Also, they do not focus specifically on streaming applications and hence making it difficult to utilize them properly.
 
 \section{Contribution}
 
-In this paper we propose a high-level programming framework for building communication intensive stream applications. We focus on integrating the packet processing and application tasks into a single graph and using this to extract data parallelism. The developer describes their program as a graph of \textit{actors}. Each actor consumes one or more \textit{tokens} of data, which may be simple data such as integers, or more complex data such as packets, arrays, or objects and produces one or more tokens. The framework can be used to automatically map the application over multiple parallel cores, and interface with the \texttt{netmap} APIs \cite{Rizzo:2012:RNI:2090147.2103536} for accessing data through the network buffers.
+In this paper we propose a parallel processing framework for building stream applications that are bound by very large communication. A simplistic framework where the filters are described as \textit{actors} and the application is represented by connecting such \textit{actors} into a directed acyclic graph (DAG). Then our framework is used to establish, (1)the communication system that allows these \textit{actors} to send and receive data across each other and (2)the computation system that executes these tasks in parallel on a given multicore system. The main contributions can be described as,
+
+\begin{enumerate}
+\item Parallel multi point communication layer, which provides the ability for stream actors to communication across the network.
+\item Execution system that can run the given data parallel filters on the multicore system
+\item Utilizes network hardware features such as queues and flow control to support stream applications
+
+\end{enumerate}
+
+\comment{
+We focus on integrating the packet processing and application tasks into a single graph and using this to extract data parallelism. The developer describes their program as a graph of \textit{filters}. Each actor consumes one or more \textit{tokens} of data, which may be simple data such as integers, or more complex data such as packets, arrays, or objects and produces one or more tokens. The framework can be used to automatically map the application over multiple parallel cores, and interface with the \texttt{netmap} APIs \cite{Rizzo:2012:RNI:2090147.2103536} for accessing data through the network buffers.
 
 The system can be divided into three main parts:
 
@@ -507,13 +544,20 @@ The system can be divided into three main parts:
 \item Given a graph that represents the workload to be performed by the application, we construct and integrate the packet processing operations represented as a directed acyclic graph (DAG) to it. (Section \ref{ppe})
 \item A run-time system that executes these tasks in parallel and explicitly schedules them on the multicore processor. (Section \ref{ppt})
 \end{itemize}
-
+}
 
 % Even though we integrate the system with the application, the techniques for extracting parallelism from the application is not in scope of this paper. The application is considered to be in a streaming model and the tasks corresponding to the various functions are considered to be parallel in nature.
 
-\section{Background}
+\comment{
+With the continuing improvement of multicore and many-core architectures, it is becoming essential to improve the processing speeds of packet operations along with those of the application in order to scale performance.
+}
+\comment{
+When performing packet processing operations for communication intensive stream applications, a major challenge is the high levels of performance required. These applications process large numbers of data streams in real time.  If the communication system cannot keep up with the rate at which packets arrive, then they must be dropped or remain unprocessed.
+}
 
-In this paper, we are concerned with applications that operate on data streams. Example operations of such an application are represented in the stream graph shown in figure \ref{fig1}. This sample application operates by performing encryption on the data that matches predefined rules like file names, access level of user, etc., otherwise it performs compression. Due to the nature of such stream applications, it is possible to distribute the component operations across different CPUs. We are particularly interested in a scenario where groups of networked servers are used to perform these kind of stream operations by distributing them evenly over different nodes.
+\section{Introduction}
+
+Our main objective is to optimize performance of streaming applications by First, providing a speaclized communication link between the filters and Second, extracting data parallel actors and executing them in parallel. Stream applications usually consists of stateless and stateful filters. Stateful filters are those that are depedendent on the previous execution and hence making it difficult to replicate them. Stateless filters do not pose such limitations and can be freely replicated based on the available data streams. In this paper, we focus on extracting data parallelism based on stateless filters and streams. Example operations of such an application are represented in the stream graph shown in Figure \ref{fig1}. All the filters used in this application are essentially stateless filters. This sample application operates by performing encryption on the data that matches predefined rules like file names, access level of user, etc., otherwise it performs compression. Due to the nature of such stream applications, it is possible to replicate and distribute the filters across different CPUs. We are particularly interested in a scenario where groups of networked servers are used to perform these kind of stream operations by distributing data streams over multiple nodes.
 
 \begin{figure}[ht]
 \centering
@@ -530,40 +574,34 @@ In this paper, we are concerned with applications that operate on data streams. 
 \label{fig1}
 \end{figure}
 
-The main challenge that arises in such a situation is how best to address the intensive computational and communication demands of such applications. Two important features enable us to tackle this challenge. Firstly, the operations of both the application and the network are parallel in nature. Secondly, multicore processors can be used to execute the application.
+The main challenge that arises in such a situation is how best to address the intensive computational and communication demands of such applications. Two important features enable us to tackle this challenge in our framework. Firstly, the operations of both the application and the network are designed to be stateless filters. Secondly, communication techniques are employed that would enable multicore processors to perform operations related to computation and communication in parallel.
 
-In our system, we use an efficient parallel processing framework that could be leveraged on multicore processors and multi queue network controllers to achieve efficient communication. The performance of multicore processors continues to dramatically improve the capability of commodity hardware, thus making it possible to meet the computational demand of such applications. In addition, multi queue network interface controllers, designed to handle multiple streams of data, help achieve the necessary communication performance.
+In building a framework for such applications on general purpose computers, we can exploit two hardware features that could allow for dramatically improved performance, namely multicore processors and multi queue network controllers. Using the multiple queues it makes it possible to do much of the communication in parallel and using the multiple cores the filters from the stream application can be executed concurrently.
+
+A major bottleneck for communication on general purpose computers is the overhead of the operating system's network stack. In particular, for applications that run as user processes, data must be copied between OS kernel space and user space. Previous research uses alternate mechanisms to access data from the network hardware directly to overcome this problem\cite{Dobrescu09routebricks:exploiting}\cite{Han:2010:PGS:1851275.1851207}\cite{Kohler2000}. Most of these use modern network hardware in combination with specialized system software that allows direct access to hardware-controlled packet queues, dramatically reducing overheads and improving performance. However, constructing stream applications that use these features is difficult. Furthermore, many stream applications have a very specific communication pattern, typically operating on a \textit{flow}, a specific \textit{stream} between two filters. Data in a \textit{stream} must be processed sequentially, whereas different \textit{flows} can often be processed in parallel.
+
+Newer network hardware has introduced a mechanism for separating arriving data into multiple queues, where data that belong to the same \textit{flow} are\comment{ guaranteed to be} placed in the same queue\cite{micro2008} \cite{intel2010}. We can utilize this feature to operate on multiple streams of data by processing each of the queues in parallel. However, building applications that can use this feature directly is a challenging task because it requires explicit parallel programming and interaction with low-level network interfaces. Previous research~\cite{Dobrescu09routebricks:exploiting,Han:2010:PGS:1851275.1851207} that focuses on improving the performance of network applications in such a manner shows the complexity involved in building such a system.
+
+\comment{We parallelize both the application and packet operations to gain significant improvement in performance.}
+
+In our framework, we use a more elegant approach. We define a runtime framework that already consists of the communication filters that are pre-built. So inorder to implement a stream application such as that shown in Figure~\ref{fig1}, all we need to do is define the computation filters and connect them in the framework to the pre-built communication filters. On execution, our runtime framework is able to replicate the stateless filters and the communication filters on to the different multiple cores, thereby executing the operations belonging to different \textit{flows} in parallel.
+
+\comment{
+ parallel processing framework that could be leveraged on multicore processors and multi queue network controllers to achieve efficient communication. The performance of multicore processors continues to dramatically improve the capability of commodity hardware, thus making it possible to meet the computational demand of such applications. In addition, multi queue network interface controllers, designed to handle multiple streams of data, help achieve the necessary communication performance.
 
 An important part of our system is the tasks related to packet processing in protocols such as UDP, IP, etc., We utilize the modular router, Click, for these packet processing tasks. Click is a tool that includes a library of elements which is used in building flexible, re-configurable and modular software routers \cite{Kohler2000}. It offers a high-performance platform that is flexible for rapid development of newer network protocols. An improved version known as SMP Click supports thread-based parallel processing of network related tasks\cite{Chen:2001:FCP:647055.759948}. Until recently, Click's performance in the user space was inferior to its kernel space equivalent. This is mainly due to its extensive use of polling driver in the kernel space that was not possible in user space. Netmap I/O\cite{Rizzo:2012:RNI:2090147.2103536} provides a set of APIs that can directly access the packets from the NIC and was used to improve Click's user space performance. Although other other user space packet-access APIs could be used \cite{Rizzo:2012:RNI:2090147.2103536} \cite{1564468} \cite{Krasnyansky}, the simpler construction of \texttt{netmap} was more suitable to adapt to our framework.
+}
 
-Section \ref{dppl} represents the design principles that we follow to conceptualize our framework. Section \ref{imple} describes the implementation details used in the construction of the system. In section \ref{ppe}, we discuss the challenges in using a system consisting of execution engines to manage the work. The extent to which we extract parallelism ranges, not only to the packet tasks, but also to the low level access of data I/O to the network interface hardware through custom additions to the \texttt{netmap}. Finally in section \ref{app-const}, we present a simple stream application constructed from operations such as compression and encryption in order to evaluate our framework.
+Section \ref{dppl} represents the design principles that we follow to conceptualize our framework. Section \ref{imple} describes the implementation details used in the construction of the system. In section \ref{ppe}, we discuss the challenges in using a system consisting of execution engines to manage the work. \comment{The extent to which we extract parallelism ranges, not only to the packet tasks, but also to the low level access of data I/O to the network interface hardware through custom additions to the \texttt{netmap}.} Finally in section \ref{app-const}, we present a simple stream application constructed from operations such as compression and encryption and evaluate our framework.
 
 \section{Design Principles}
 \label{dppl}
 
 The design of a high-level programming framework that integrates packet processing tasks into the application requires overcoming several challenges. \comment{The entire system is driven by the extent to which parallelism can be extracted. Some of the techniques that can be applied to the packet processing tasks can be used for the tasks related to the application.} In this section, we describe these challenges and the principles that are used to address them. \comment{We focus on the methodologies related to the packet processing tasks and the parallel processing engine itself.}
 
-\subsection{Userspace Packet I/O}
+\subsection{Communication filters}
 
-For a packet processing system to be integrated with an application, it is necessary to have an efficient mechanism for accessing the data from the NIC without interacting with the operating system. Rapid data access here is crucial for the extraction of data parallelism at later stages. \comment{In using the techniques described below we exploit the modern NIC architecture to its full potential.}
-
-\subsubsection{Handling Multiple Hardware Queues}
-
-The development of virtualization and improved network flow handling has led to hardware level multi queue support in NICs. During transmission, concurrent writes to different queues are possible, enabling multiple processes to send data simultaneously. During reception, the NIC classifies each packet onto one of the receive queues in a technique known as Receive Side Scaling (RSS)\cite{micro2008} \cite{intel2010}. This technique uses the header information or tuples to classify packets onto different hardware queues. Multi queue support can handle several streams of data in parallel and it is exploited extensively in our framework for this reason. By offloading the classification of packets to the NIC, we remove any overhead associated with packet classification in the application. We can also use these hardware queues as a means of balancing the workload across different threads by controlling the number of queues that each process handles. \comment{Since different processes can access these transmit and receive queues, concurrent access to data is possible.}
-
-\subsubsection{Flow based Packet Batching}
-
-Packet batching is a common method used to boost the performance of network applications where several packets are combined and operated upon together, thus reducing the overhead of I/O operations. In our framework, batching is utilized in a form where the number of packets in a batch is varied based on the available space in the hardware queue. This number reflects the amount of data we are able to process before issuing hardware synchronization calls and forms an important means by which we reduce the usage of system calls.
-
-\subsubsection{Reduction of Per Packet System Calls}
-
-System calls are required in order to synchronize data between the NIC hardware and the buffer memory used for intermediate storage of packets. Previous work describes the overhead associated with per-packet system calls and provides mechanisms for overcoming this overhead\cite{1564468}\cite{Han:2010:PGS:1851275.1851207}\cite{Rizzo:2012:RNI:2090147.2103536}.
-
-We employ an \textit{adaptive scheme} described in section \ref{ppio} that utilizes this strategy of reducing per-packet system calls. Our framework balances the system calls based on the communication rate and application processing speed. The transmission and reception are handled differently to optimize the usage of system calls in each of the cases independently. During transmission, we issue system calls to synchronize the available buffer space based on the rate at which we transmit data. This prevents degradation in latency for larger packets and improves performance for smaller packets. During reception of packets, the system reads packets at the rate at which it is able to process them.
-
-\subsection{Packet Processing Graph}
-
-\comment{Understanding the set of packet processing tasks associated with the application is essential to performing them in parallel.} We use a graph-based representation of packet processing tasks to determine the dependencies involved for the different stages and to determine the relation with the different tasks of the application. This graph contains the stages through which the data associated with the application is transformed into network packets and vice versa. It shows which of the tasks can be performed in parallel with those of the application, and highlights those that have a data dependency on a specific task in the application. The graph also enables optimizations based on specific characteristics of the application or the architecture used for execution. Figure \ref{fig2} shows a graph representing User Datagram Protocol (UDP) packet generation.
+\comment{Understanding the set of packet processing tasks associated with the application is essential to performing them in parallel.} We use a graph-based representation of filters related to packet processing to determine the dependencies involved for the different stages and to determine the relation with the different tasks of the application. This graph contains the stages through which the data associated with the application is transformed into network packets and vice versa. It shows which of the tasks can be performed in parallel with those of the application, and highlights those that have a data dependency on a specific task in the application. The graph also enables optimizations based on specific characteristics of the application or the architecture used for execution. Figure \ref{fig2} shows a graph representing User Datagram Protocol (UDP) packet generation.
 
 \begin{figure}[ht]
 \centering
@@ -572,22 +610,42 @@ We employ an \textit{adaptive scheme} described in section \ref{ppio} that utili
 \label{fig2}
 \end{figure}
 
-\subsection{Application Task Graph}
+\subsection{Userspace communication}
 
-\comment{Application task graph represents the operations associated in performing the computations.} The subset of the application that we are interested in parallelizing is the stream processing component. In such components, the communication flow between tasks is well-defined. Both the packet processing and application tasks can be represent by a directed acyclic graph (DAG) similar to the packet processing graph. The packet processing tasks operate on packets and the application tasks operate on the data. Since we focus more on parallel packet processing, optimizations in relation to the application graph are not discussed. It is assumed that a static version of the application graph is available and we focus more on executing these tasks in parallel with the packet processing tasks.
+For a communication system to be integrated with an application, it is necessary to have an efficient mechanism for reading and writing packets to and from the NIC without interacting with the operating system. Rapid data access here is crucial for the extraction of data parallelism at later stages. \comment{In using the techniques described below we exploit the modern NIC architecture to its full potential.}
+
+\subsubsection{Handling Multiple Hardware Queues}
+
+The development of virtualization and improved network flow handling has led to hardware level multi queue support in NICs. During transmission, concurrent writes to different queues are possible, enabling multiple processes to send data simultaneously. During reception, the NIC classifies each packet onto one of the receive queues in a technique known as Receive Side Scaling (RSS)\cite{micro2008} \cite{intel2010}. This technique uses the header information or tuples to classify packets onto different hardware queues. Multi queue support can handle several streams of data in parallel and it is exploited extensively in our framework for this reason. By offloading the classification of packets to the NIC, we remove any overhead associated with packet classification in the application. We can also use these hardware queues as a means of balancing the workload across different threads by controlling the number of queues that each thread handles. \comment{Since different processes can access these transmit and receive queues, concurrent access to data is possible.}
+
+\subsubsection{Flow based communication}
+
+Combining multiple packets that belong to a flow known as \texttt{batching} is a common method used to boost the performance of network applications where several packets are combined and operated upon together, thus reducing the overhead of I/O operations. In our framework, batching is utilized in a form where the number of packets in a batch is varied based on the available space in the hardware queue. This number reflects the amount of data we are able to process before issuing hardware synchronization calls and forms an important means by which we reduce the usage of system calls.
+
+\subsubsection{Reduction of Per Packet System Calls}
+
+System calls are required in order to synchronize data between the NIC hardware and the buffer memory used for intermediate storage of data. Previous work describes the overhead associated with per-packet system calls and provides mechanisms for overcoming this overhead\cite{1564468}\cite{Han:2010:PGS:1851275.1851207}\cite{Rizzo:2012:RNI:2090147.2103536}.
+
+We employ an \textit{adaptive scheme} described in section \ref{ppio} that utilizes this strategy of reducing per-packet system calls. Our framework balances the system calls based on the communication rate and application processing speed. The transmission and reception are handled differently to optimize the usage of system calls in each of the cases independently. During transmission, we issue system calls to synchronize the available buffer space based on the rate at which we transmit data. This prevents degradation in latency for larger packets and improves performance for smaller packets. During reception of packets, the system reads packets at the rate at which it is able to process them.
+
+\subsection{Computation filters}
+
+\comment{Computation filters represents the operations associated . The subset of the application that we are interested in parallelizing is the stream processing component.} In stream processing model, the communication flow between tasks is well-defined. \comment{This is usually represented by a synchronous data flow graph (SDF).} The filters associated with the computation can be connected to the communication filters in the same directed acyclic graph (DAG) used to represent the application. \comment{The packet processing tasks operate on packets and the application tasks operate on the data. Since we focus more on parallel packet processing, optimizations in relation to the application graph are not discussed. It is assumed that a static version of the application graph is available and we focus more on executing these tasks in parallel with the packet processing tasks.} The computation filters are designed by the user and are programmed into the runtime framework which already consists of the communication filters.
 
 \subsection{Integration}
 
-The sequence of tasks that can be executed in parallel is determined at this stage. The integration stage is used to combine the application graph and the packet processing graph into a larger graph that unifies and represents the overall operations. The dependency relations identified earlier are used in establishing links between the graphs. We determine the sequence of tasks that can be executed in parallel from both the application task graph and packet processing graph. The combined set of tasks is then used by the parallel processing engine.
+\comment{The sequence of tasks that can be executed in parallel is determined at this stage. The integration stage is used to combine the application graph and the packet processing graph into a larger graph that unifies and represents the overall operations. The dependency relations identified earlier are used in establishing links between the graphs. We determine the sequence of tasks that can be executed in parallel from both the application task graph and packet processing graph. The combined set of tasks is then used by the parallel processing engine.}
+
+This stage essentially connects the corresponding communication filter to the computation filter defined earlier. Based on the stream graph that is provided, the necessary communication filters are added. This also determines the unique \textit{flows} that exists between the filters and is used later to replicate and execute them in parallel.
 
 \subsection{Parallel Processing Engine}
 
-Two important aspects that the parallel processing engine must address is the scheduling of tasks and balancing the load across the available resources. The parallel processing engine consists of collaborating processes which are bound to specific CPUs and act as engines to execute the workload. Based on their requirements and the available resources, tasks are scheduled across these execution engines. \comment{In this manner, the workload can be distributed flexibly.}
+Two important aspects that the parallel processing engine must address is the scheduling of filters and balancing the load across the available resources. The parallel processing engine consists of collaborating processes which are bound to specific CPUs and act as engines to execute the workload. Based on their requirements and the available resources, filters are scheduled across these execution engines. We assume a static schedule of the filters on to the given multiple cores is provided for execution. \comment{In this manner, the workload can be distributed flexibly.}
 
 \section{Implementation}
 \label{imple}
 
-\comment{Most extant stream applications depend on the OS for their communication tasks.}In commodity systems, the interaction with the OS for network operations is a necessary abstraction to handle multiple applications. However, in the case of specialized servers which cater to specific applications, it would be beneficial to interact directly with the network device. Moreover, in the case of intensive network traffic, the OS could act as a bottleneck due to the overhead associated with data flowing through the kernel before being transmitted through the network device\cite{Wu:2007:PPB:1323954.1323957}\cite{Wu:2007:PAL:1227865.1228021}. Eliminating this would be possible, either by executing the application in the kernel space (which could compromise stability of the system), or by using an interface for accessing the NIC buffers from user space. The latter approach is supported by several interfaces such as \texttt{netmap} \cite{Rizzo:2012:RNI:2090147.2103536}, PF\_RING DNA \cite{1564468}, UIO-IXGBE \cite{Krasnyansky}, etc., Even though these interfaces support user space packet access, they lack the ability to be invoked in a efficient manner by the application. More specifically, they do not have any way of optimizing the rate of processing, lacking, for example, the concept of flows for application tasks. The lack of support for interacting with these interfaces in order to read and write data in parallel from concurrent processes or threads adds to the problem. Also, since the application is now responsible for handling network packets, it has to perform the additional operations that would otherwise be carried out by the OS.
+\comment{Most extant stream applications depend on the OS for their communication tasks.}In commodity systems, the interaction with the OS for network operations is a necessary abstraction to handle multiple applications. However, in the case of specialized servers which cater to specific applications, it would be beneficial to interact directly with the network device. Moreover, in the case of intensive network traffic, the OS could act as a bottleneck due to the overhead associated with data flowing through the kernel before being transmitted through the network device\cite{Wu:2007:PPB:1323954.1323957}\cite{Wu:2007:PAL:1227865.1228021}. Eliminating this would be possible, either by executing the application in the kernel space (which could compromise stability of the system), or by using an interface for accessing the NIC buffers from user space. The latter approach is supported by several interfaces such as \texttt{netmap} \cite{Rizzo:2012:RNI:2090147.2103536}, PF\_RING DNA \cite{1564468}, UIO-IXGBE \cite{Krasnyansky}, etc., Even though these interfaces support user space packet access, they lack the ability to be invoked in a efficient manner by the application. More specifically, they do not have any way of optimizing the rate of processing, lacking, for example, the concept of flows for application tasks. The application tasks are essentially the computation filters defined in our design principles. The lack of support for interacting with these interfaces in order to read and write data in parallel from concurrent processes or threads adds to the problem. Also, since the application is now responsible for handling network packets, it has to perform the additional operations that would otherwise be carried out by the OS.
 
 Our framework provides support for sending and receiving data in parallel over the NIC from user space and a common parallel execution engine that supports both application and packet processing tasks.
 
@@ -621,7 +679,7 @@ During testing, it was found that it was essential to have control over the rate
 
 
 
-Algorithms \ref{s_pack} and \ref{r_pack} use a batch update for sending and receiving packets based on the rate at which data flows through the interface. This is done by maintaining a data structure that has information about the hardware rings, updating it on a periodic basis. Once a fixed amount of space is determined, we update this on our local structure. We then continue to read or write data from the hardware ring, but update the actual limits and position on our local structure. When we have used up the space that was allocated, we update the hardware ring with the changes. In cases where the application is generating sparse traffic, it is possible to frequently update the ring in order to maintain a consistent latency in transmission. Multi queue support is provided by managing the process of selecting the ring to send or receive based on an application determined function. The $f(n)$ present in Algorithm \ref{s_pack} line \ref{s_pack_param} and Algorithm \ref{r_pack} line \ref{r_pack_param} represents this. Choosing a random queue has proven to be effective in our experiments, but if an application requires a specific flow to be maintained, a different function here could provide that support. This would be helpful in cases where the data operations are more predictable, or if the transactions seem to follow a specific pattern. The $threshold$ specified in Algorithm \ref{r_pack} line \ref{r_pack_thres} is determined for each application based on the rate at which it is able to process data. By issuing the system calls such as \textit{ioctl} and \textit{poll} only when required, and effectively handling the multiple queues, we are able to achieve improved performance.
+Algorithms \ref{s_pack} and \ref{r_pack} use a batch update for sending and receiving packets based on the rate at which data flows through the interface. This is done by maintaining a data structure that has information about the hardware rings, updating it on a periodic basis. Once a fixed amount of space is determined, we update this on our local structure. We then continue to read or write data from the hardware ring, but update the actual limits and position on our local structure. When we have used up the space that was allocated, we update the hardware ring with the changes. In cases where the application is generating sparse traffic, it is possible to frequently update the ring in order to maintain a consistent latency in transmission. Multi queue support is provided by managing the process of selecting the ring to send or receive based on an application determined function. The $f(n)$ present in Algorithm \ref{s_pack} line \ref{s_pack_param} and Algorithm \ref{r_pack} line \ref{r_pack_param} represents this. Choosing a random queue ($f(n)=X \sim U([0,n])$ n=no of queues)has proven to be effective in our experiments, but if an application requires a specific flow to be maintained, a different function here could provide that support. This would be helpful in cases where the data operations are more predictable, or if the transactions seem to follow a specific pattern. The $threshold$ specified in Algorithm \ref{r_pack} line \ref{r_pack_thres} is determined for each application based on the rate at which it is able to process data. By issuing the system calls such as \textit{ioctl} and \textit{poll} only when required, and effectively handling the multiple queues, we are able to achieve improved performance.
 
 
 \setlength{\textfloatsep}{0pt}
@@ -712,7 +770,7 @@ Each of the elements in Click contain a virtual function which is called from th
 \end{algorithm}
 \subsection{Parallel Processing Engine}
 
-After integrating the packet operations by means of support from \texttt{Click}'s infrastructure and access to network hardware through \texttt{netmap}'s APIs, we integrate these operations with the application graph. The results is a complete task graph that does both the computation and communication operations. The next logical step is executing these tasks in parallel by exploiting data and task parallelism. Packet streams are inherently operable in a data parallel fashion i.e. it is possible to operate on two different streams simultaneously. Since the application tasks depend on the data packets, they could also be executed in parallel. So from the integrated graph constructed by combining the application and packet processing operations, it becomes possible to extract data parallelism by operating on different data streams simultaneously. By executing different components, representing distinct operations on the data streams, it is also possible to exploit task parallelism.
+After defining the communication filters by means of \texttt{Click}'s infrastructure and access to network hardware through \texttt{netmap}'s APIs, we integrate these filters with the application tasks. The results is a complete stream graph that does both the computation and communication operations. The next logical step is executing these filters in parallel by exploiting data parallelism. Packet streams are inherently operable in a data parallel fashion i.e. it is possible to operate on two different streams simultaneously. \comment{Since the application tasks depend on the data packets, they could also be executed in parallel. So from the integrated graph constructed by combining the application and packet processing operations, it becomes possible to extract data parallelism by operating on different data streams simultaneously. By executing different components, representing distinct operations on the data streams, it is also possible to exploit task parallelism.}
 
 \subsubsection{Execution engine}
 \label{ppe}
@@ -724,7 +782,7 @@ In order to prevent unwanted process migration due to the OS scheduler, we speci
 \subsubsection{Parallel task processing}
 \label{ppt}
 
-Once we have scheduled our execution engines on the physical system, the next step is to execute the integrated task graph consisting of application and packet operations. To extract data parallelism, we replicate the task graph onto multiple execution engines. This ensures operations on the same data are performed on the same CPU, thereby using local cache. By making sure that packets belonging to a specific flow always end up in the same execution engine, we only perform operations conforming to that stream of data. \comment{We use the ability of modern NICs to classify packets onto different queues, based on their attributes.}
+Once we have scheduled our execution engines on the physical system, the next step is to execute the stream graph for different \textit{flows}. To extract data parallelism, we replicate the stream graph onto multiple execution engines. This ensures operations on the same \textit{flow} are performed on the same CPU, thereby using local cache. By making sure that packets belonging to a specific f\textit{flow} always end up in the same execution engine, we only perform operations conforming to that stream of data. \comment{We use the ability of modern NICs to classify packets onto different queues, based on their attributes.}
 
 
 \comment{
@@ -750,9 +808,9 @@ bool payload_copy( const void *payload_data, uint32_t length )
 \end{lstlisting}
 }
 
-In order to replicate the task graph we had to overcome some restrictions. First was to ensure that there was no intricate data dependency between different data streams. Although Click's library of elements are designed to be executed in parallel \cite{Chen:2001:FCP:647055.759948}, they are more oriented towards serial execution. Hence we had to ensure the code present in the elements were thread-safe. One important modification we had to perform was in Click's packet library. By default, Click destroys and recreates the packet's internal storage buffer by reallocating memory space, an expensive operation. In order to avoid this, we allocate a packet with a large static buffer and copy the data to be modified on it. We then modify the pointers that determine the header and data addresses, based on the required packet length. \comment{This is done by using a simple sub-routine shown in Listing \ref{payload_sub} that we added to the packet library.} Although this addition incurs the overhead of a copy operation, it avoids performing invalid and dangerous memory operations directly on the network hardware queue's buffer.
+\comment{In order to replicate the task graph we had to overcome some restrictions. First was to ensure that there was no intricate data dependency between different data streams. Although Click's library of elements are designed to be executed in parallel \cite{Chen:2001:FCP:647055.759948}, they are more oriented towards serial execution. Hence we had to ensure the code present in the elements were thread-safe. One important modification we had to perform was in Click's packet library. By default, Click destroys and recreates the packet's internal storage buffer by reallocating memory space, an expensive operation. In order to avoid this, we allocate a packet with a large static buffer and copy the data to be modified on it. We then modify the pointers that determine the header and data addresses, based on the required packet length. \comment{This is done by using a simple sub-routine shown in Listing \ref{payload_sub} that we added to the packet library.} Although this addition incurs the overhead of a copy operation, it avoids performing invalid and dangerous memory operations directly on the network hardware queue's buffer.
 
-Click's packet library also provides a mechanism to take ownership of a specific address and pass a destructor to be called when the packet is killed. To prevent corruption of memory mapped from the hardware queue by the application tasks, we use the above mechanism to copy the data before modifying it. In generating the application graph as a sequence of operations, it also makes it possible to run different graphs on each individual execution engine. MPI communication is used to schedule the application and packet operations on the processes representing the execution engines. Furthermore, we use it to also perform explicit data sharing between tasks in the application that require it.
+Click's packet library also provides a mechanism to take ownership of a specific address and pass a destructor to be called when the packet is killed. To prevent corruption of memory mapped from the hardware queue by the application tasks, we use the above mechanism to copy the data before modifying it. In generating the application graph as a sequence of operations, it also makes it possible to run different graphs on each individual execution engine. MPI communication is used to schedule the application and packet operations on the processes representing the execution engines. Furthermore, we use it to also perform explicit data sharing between tasks in the application that require it.}
 
 \section{Experimental Evaluation}
 
@@ -760,16 +818,16 @@ In order to evaluate our framework, we test the scalability and the performance 
 
 \subsection{Hardware Setup}
 
-The evaluation system consists of two servers connected directly to each other. Each server consists of two Intel Xeon 5600 hexacore HT in a dual socket configuration with 24GB DDR3 memory. In total there is 2 Processors x 6 Cores x 2 HT = 24 CPUs in each server. These servers are connected using Intel 8299EB 10Gbe adapters over directly attached twin-axial cables. The adapters are located in the PCI Express x8 slot to maximize the available bandwidth. This forms a closed connection between two servers and limits the influence of external devices such as switches or routers on data transmission.
+The evaluation system consists of two servers connected directly to each other. Each server consists of two Intel Xeon 5600 hexacore HT in a dual socket configuration with 24GB DDR3 memory. In total there is 2 Processors x 6 Cores x 2 HT = 24 CPUs in each server. These servers are connected using Intel 8299EB 10Gbe adapters over directly attached twin-axial cables. The adapters are located in the PCI Express x8 slot to provide required bandwidth for the network cards. This forms a closed connection between two servers and limits the influence of external devices such as switches or routers on data transmission.
 
-Each application is constructed as two parts, one a source of data and the other a sink. We measure the overall time it takes for application task operations, packet operations, and the time to send from the source and receive at the sink. This is done for different packet sizes and applications. Then we plot the speedup achieved in each of the cases over the serial version where we have a single sender and receiver operating on the multiple queues. This is the baseline in our experiments and is similar to how the OS behaves for transmitting and receiving using the multi queue network controller.
+Each application is constructed as two parts, one a source of data and the other a sink. We measure the overall time it takes for application task operations, communication operations, and the time to send from the source and receive at the sink. This is done for different packet sizes and applications. Then we plot the speedup achieved in each of the cases over the serial version where we have a single sender and receiver operating on the multiple queues. This is the baseline in our experiments and is similar to how the application would behave if it were implemented using just direct access to the network hardware.
 
 The Intel 82599EB is restricted to 16 queues when using Receive Side Scaling (RSS). This limited the maximum amount of processes at the sink to be 16, even though 24 CPUs were available. The source is not affected by this limitation and can use all the 24 CPUs available, along with 24 hardware transmission queues. Overall, we require at least one hardware queue mapped to each of our processes or execution engines. \comment{We also ensure that each of the processes are bound to a particular CPU by issuing affinity calls to the OS to ensure that they are not migrated between different cores.}
 
 \subsection{Application Construction}
 \label{app-const}
 
-In order to evaluate our framework, distinct operations were required that would be suitable for a streaming framework. Since compression and encryption applications are relatively common, we chose two applications composed from these operations. The integrated graph that represents both these applications is shown in fig \ref{fig-app-graph}. UDP is used to send the data between source and sink.
+In order to evaluate our framework, distinct operations were required that would be suitable for a streaming framework. Since compression and encryption applications are relatively common, we chose two applications composed from these operations. The stream graph that represents both these applications is shown in fig \ref{fig-app-graph}. UDP is used to send the data between source and sink.
 
 \begin{figure}[htb]
 \centering
@@ -793,14 +851,31 @@ It can be seen in Figure \ref{fig-res} that there is considerable difference in 
 
 One is that, from fig\ref{fig-res}.(d,e,f), we note that compression requires more work than decompression, whereas from fig\ref{fig-res}.(a,b,c) encryption and decryption are more balanced. This is evident from the continued speedup we get up to 4 senders in the case of compression/decompression. Only a slight asymmetry can be seen in the encryption/decryption case, where adding more senders than receivers only yields a slight increase in performance. In this case, the likely explanation is support for AES instructions in the architecture, making decryption a marginally easier task. In general though, the performance here only improves by increasing both the number of senders and receivers simultaneously. Even from these preliminary results, it is clear that the optimal sender/receiver balance varies from application to application and highlights the need for effective load-balancing.
 
-Packet size also impacts performance as seen in fig\ref{fig-res}.(d,e,f). The compression operation is influenced more than that of the encryption application. There is a speedup of 12x in fig\ref{fig-res}.(d) with smaller packets and 10x in fig\ref{fig-res}.(f) with larger packets. This discrepancy appears to be greater in cases where there is a large number of senders and a high number of receivers. A possible explanation for this relates to the CPU utilization on the faster receivers. With large packet sizes, they are more likely to block waiting for data to be streamed from the slower senders. Smaller packets allow the work to be distributed more evenly among the available receivers. In the encryption application, there is not as much asymmetry and packet size does not matter as much. The fact that packet size impacts applications differently suggests that is essential to incorporate dynamic packet-size selection into the framework itself.\comment{ to respond to the unique requirements of each application.}
+Packet size also impacts performance as seen in fig\ref{fig-res}.(d,e,f). The compression operation is influenced more than that of the encryption application. There is a speedup of 12x in fig\ref{fig-res}.(d) with smaller packets and 10x in fig\ref{fig-res}.(f) with larger packets. This discrepancy appears to be greater in cases where there is a large number of senders and a high number of receivers. A possible explanation for this relates to the CPU utilization on the faster receivers. With large packet sizes, they are more likely to block waiting for data to be streamed from the slower senders. Smaller packets allow the work to be distributed more evenly among the available receivers. In the encryption application, there is not as much asymmetry and packet size does not matter as much. The fact that packet size impacts applications differently suggests that it is essential to incorporate dynamic packet-size selection into the framework itself.\comment{ to respond to the unique requirements of each application.}
 
 From fig\ref{fig-res}(a,b,c,d,e,f), a drop in speedup is apparent when employing 12 senders or more. The most likely explanation for this is the influence of the NUMA architecture \cite{Awasthi:2010:HPO:1854273.1854314}. The 12 sender point is when all the cores of a particular CPU are utilized and moved onto a different socket. This causes issues in relation to cache locality and the limitation of the network controller to receive data through the PCI-E bus from more than one CPU. Despite these NUMA architecture issues, once the initial drop is overcome, the application continues to scale and eventually attain better performance in most cases.
 
-In summary, it can be seen that the framework scales well for different workloads, can handle both computations and communication, and can operate on them in parallel. In some cases, the framework can be improved by having a greater degree of control over the fine grained parallelism within the execution engines. This can be achieved by introducing pipeline stages for different operations.
+In summary, it can be seen that the framework scales well for different workloads, can handle both computations and communication, and can operate on them in parallel. We see that we can achieve a speedup $10\times$ for compression and $12\times$ for encryption sample stream application respectively on the architecture consisting of two nodes of 24 logical cores each. In some cases, the framework can be improved by having a greater degree of control over the fine grained parallelism within the execution engines. This can be achieved by introducing pipeline stages for different operations.
+
+\comment{Results also suggest where efforts should be made in developing the framework further. Until now, the focus has been on deploying the execution engines in order to execute stream applications and to enable optimal communication between separate nodes.}
+
+\comment{Future work will address some of the opportunities presented by these execution engines and the collaboration between them.}
+
+Since we work with a static schedule provided by the user in executing the applications. Dynamic load balancing is likely to be the most benificial addition to the framework in terms of performance of the stream applications built using it. It is also possible to add the capability to dynamically adjust the number of network queues allocated to each core as stream application requirements change over time. Finally, as seen in Figure~\ref{fig-res}, being able to adjust packet sizes dynamically to an optimal value for each network link, dependant on the stream application, would also be a useful addition to the framework.
 
 \section{Related Work}
 
+Stream programming languages such as StreamIt~\cite{Thies:2002:SLS:647478.727935}, LUSTRE~\cite{Halbwachs91thesynchronous} and extensions such as Carpenter et al.~\cite{Carpenter:2007:SMD:1776200.1776217}, Buck et al.~\cite{Buck:2004:BGS:1015706.1015800} target stream applications but the focus is more on parallelizing the computations related to the application alone on the multicore system unlike our runtime framework which parallelizes communication operations also.
+
+MPICH-G2~\cite{Karonis02mpich-g2:a} targets large grid networks and for MPI programming model unlike us which is focused more on streaming model. Moreover, we do not employ any of the MPI communication primitives provided and use our own runtime system to communicate data between the filters in the stream graph across systems.
+
+Wagner et al.~\cite{5160944} propose a stream processing framework that completely utilizes the MPI library. They make use of MPI groups and communicators to improve the flexibility of MPI library to support stream-processing. Our runtime framework is designed to provide a low overhead and parallel communication framework by directly utilizing the network link. Whereas they employ a library using MPI primitives to construct their stream-processing system and rely on the underlying abstraction layer to communicate over any network the MPI library supports.
+
+Mancini et al.~\cite{5493465} propose a hybrid approach of Stream and MPI programming models and use a whole MPI program as building block in a stream application to improve processing speeds of computational units in hetrogeneous computational systems.
+
+While we use MPI to execute the computation filters, our runtime framework employs a direct and parallel communication interface for the actual transmission of reception of data between filters. This is the key feature that enables us to parallelize the communication along with the computation for a given streaming application, which is essential in improving its performance.
+
+\comment{
 Several prior researchers \cite{Dobrescu09routebricks:exploiting}\cite{Han:2010:PGS:1851275.1851207}\cite{Wang:2009:PPN:1542275.1542307}\cite{springerlink:10.1007/s11227-011-0579-3} have worked on using commodity multicore processors to perform network operations.
 
 Dobrescu et al.\cite{Dobrescu09routebricks:exploiting} shows the performance improvement achieved in the construction of software routers by distributing related operations over multiple servers.
@@ -810,16 +885,15 @@ Han et al. \cite{Han:2010:PGS:1851275.1851207} perform tasks related to high per
 Wang et al. \cite{Wang:2009:PPN:1542275.1542307} constructs a high performance connection-affinity based lock-free multicore network processing system that claims to achieve multiple Gbps network processing speed for complex tasks.
 
 Egi et al.\cite{springerlink:10.1007/s11227-011-0579-3} shows techniques on parallelizing network operations on multicore architectures by defining principles that consider multiple resources and not just the CPU alone.
-
-Stream programming languages such as StreamIt \cite{Thies:2002:SLS:647478.727935}, LUSTRE \cite{Halbwachs91thesynchronous}, etc., target stream applications but the focus is more on parallelizing the computations related to the application alone on the multicore system.
+}
 
 \comment{
-All of these applications are more focused on operating as a network application and primarily focus on parallelizing packet operations. In our work even though a part of it involves parallelizing network operations, the objective of this research is to provide support for parallelizing stream application and distributing their workloads over multiple systems. This also requires optimizing the underlying network operations by parallelizing it.}
+All of these applications are more focused on operating as a network application and primarily focus on parallelizing packet operations. In our work even though a part of it involves parallelizing network operations, the objective of this research is to provide support for parallelizing stream application and distributing their workloads over multiple systems. This also requires optimizing the underlying network operations by parallelizing it.
 
 \texttt{Netmap} \cite{Rizzo:2012:RNI:2090147.2103536}, provides the APIs to access the hardware queue's buffer in user space by means of memory mapped rings. It implements an intermediate ring in kernel space that is used to synchronize the data from the user space to that of hardware queues in the NIC.
 
 The Click modular router \cite{Kohler2000} is an extensively used tool for the construction of software routers using general purpose hardware and provides a comprehensive infrastructure to support this. SMP Click \cite{Chen:2001:FCP:647055.759948} is an improved version, which supports parallel processing of these software routers using threads. Click implements its own mechanism and polling driver in kernel space to access packets, bypassing the OS's network infrastructure.
-
+}
 
 \comment{
 In order to send data the programmer calls \textit{poll} on the tx ring in user space and writes to it when space is available. Then he calls \textit{ioctl} to synchronize the data with the kernel ring and transmit the data. To receive the packets \textit{poll} is again called on the rx ring in user space but this time to check for new data and after reading it, he issues \textit{ioctl} to let the driver know that packet has been read and space can be re used.
@@ -833,17 +907,13 @@ In order to send data the programmer calls \textit{poll} on the tx ring in user 
 Our framework provides the necessary functionality to target communication intensive stream applications. We focus on improving the overall performance of such an application by integrating the network and application operations. We do this by providing a high-level programming framework that can be used to construct these applications, which can extract parallelism and improve communication performance. Using this it would be possible to develop stream applications that could be distributed over multiple systems and using our framework it would be possible to handle the highly intensive communication between them.}
 
 \section{Conclusions}
-In this paper we have proposed a high-level programming framework that can integrate packet processing within stream applications and perform both types of operation in parallel.
+In this paper we have proposed a parallel runtime framework that can integrate communication operations with the stream applications and perform both types of operation in parallel.
 
-We conclude that by using our algorithms for sending and receiving data, which implicitly perform batching and reduce the usage of system calls, and by combining this with \texttt{netmap} APIs which minimizes the interaction with the OS, communication performance in our framework never becomes the bottleneck in our system on the programs we have tested. Instead of performing the packet operations in the OS, by integrating it with the application using Click's elements within our infrastructure, we are able to construct a unified task graph that represents the computation and communication operations. Using this, we are able to parallelize these operations together and achieve speedups of more than a factor of eight in all the applications we tested.
+Our algorithms for sending and receiving data, which implicitly perform batching and reduce the usage of system calls, and by combining this with \texttt{netmap} APIs which minimizes the interaction with the OS, communication performance in our framework is able to scale with available processors. Instead of performing the communication operations separately in the OS, by integrating them with the stream application \comment{using Click's elements within our infrastructure,} we are able to construct a unified stream graph that represents the computation and communication filters. Using this, we are able to parallelize the stream application and achieve speedups of more than a factor of eight in all the applications we tested.
 
-In integrating these features into a programming framework, the system of multiple queues, parallel communication and computation are entirely hidden from the programmer, who merely specifies a standard stream graph for computation alone. This frees up the programmer from the onerous task of having to decide how their application should be distributed, leaving it instead to the execution engine of our framework, which also looks after the ensuing communication requirements after application distribution.
+In integrating these features into a runtime framework, the system of multiple queues, parallel communication and computation are entirely hidden from the programmer, who merely specifies a standard stream graph for computation alone. \comment{This frees up the programmer from the onerous task of having to decide how their application should be distributed, leaving it instead to the execution engine of our framework, which also looks after the ensuing communication requirements after application distribution.}
 
-The results show that our system scales to as many as 24 parallel processes on a multicore computer, and achieves speedups of more than a factor of ten in some cases compared to sequential implementations. Results also suggest where efforts should be made in developing the framework further. Until now, the focus has been on deploying the execution engines in order to execute stream applications and to enable optimal communication between separate nodes.
-
-Future work will address some of the opportunities presented by these execution engines and the collaboration between them. Dynamic load balancing is likely to be the most benificial addition to the framework in terms of performance of the stream applications built using it. It is also possible to add the capability to dynamically adjust the number of network queues allocated to each core as stream application requirements change over time. Finally, as seen in section \ref {results}, being able to adjust packet size to an optimal value for each network link, again dependent on stream application requirements, would also be a useful addition to the framework.
-
-
+The results show that our system scales to as many as 24 parallel processes on a multicore computer, and achieves speedups of more than a factor of ten in some cases compared to sequential implementations.
 
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
@@ -951,7 +1021,7 @@ This work is funded by the IRCSET Enterprise Partnership Scheme in collaboration
 % http://www.michaelshell.org/tex/ieeetran/bibtex/
 \bibliographystyle{IEEEtran}
 % argument is your BibTeX string definitions and bibliography database(s)
-\bibliography{IEEEabrv,ref.bib}
+\bibliography{ref.bib}
 %
 % <OR> manually copy in the resultant .bbl file
 % set second argument of \begin to the number of references
