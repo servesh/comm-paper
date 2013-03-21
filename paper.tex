@@ -517,9 +517,46 @@ We are able to parallelize the stream application and achieve speedups of more t
 %\setlength{\textfloatsep}{15pt}
 \section{Motivation}
 
-Applications that follow streaming model~\cite{Thies:2002:SLS:647478.727935,Halbwachs91thesynchronous,Stephens95asurvey,muthukrishnan2005data} are expressed as a set of filters that operate on one or more tokens of data. The flow of these data tokens through the filters is referred to as a \textit{stream}. Since the data is accessed sequentially in the form of a stream the memory requirement to process the data is considerably less compared to the size of the enitre stream, thereby making it possible to operate on very large data sizes. Typical applications based on this model operate on data ranges in the order of terabytes or even bigger. Applications such as financial trading systems~\cite{agarwal2009faster}, database systems~\cite{Golab03datastream}, network data analysis~\cite{Gilbert01quicksand:quick,Sullivan:1998:TSM:1268256.1268258} are few examples that follow the streaming model and operate on very large data sets.
+Applications that follow streaming model~\cite{Thies:2002:SLS:647478.727935,Halbwachs91thesynchronous,Stephens95asurvey,muthukrishnan2005data}
+are expressed as a network of \textit{filters} connected by communication
+\textit{channels}. Tokens of data flow along the communication channels
+between filters. Each filter consumes on one or more \textit{streams}
+of data from its input channels, and produces streams of data on its
+ouput channels. For applications that fit the model well, stream processing
+can greatly reduce the working memory required. Since the data flows through
+a sequence of filters in a pipelined style, it is often possible to
+operate on a relatively small window of the data at any given time,
+thereby making it possible to operate on conceptually infinite
+data streams.
 
-Traditional stream applications target multicore processors for performing their computations in parallel. As multicore processors grow in size, so do stream applications, processing more streams of data in parallel. However, in such cases the applications are typically limited by the traditional communication systems~\cite{Wu:2007:PPB:1323954.1323957,Wu:2007:PAL:1227865.1228021,Dobrescu09routebricks:exploiting,Han:2010:PGS:1851275.1851207,Kohler2000}. The reason being these systems have limited support for operating on parallel streams and are burdened by abstraction layers that provide compatibility for non-streaming applications.
+Traditionally, the stream processing model was used primarily
+signal processing type applications, where the application
+processes a continuous stream of signal inputs. For example,
+many video processing applications are modelled as a set of
+image filters operating on a stream of video frame, where the
+entire video may be hundreds of gigabytes in size, but the
+processing can be done with just a few frames at a time.
+However, in more recent years it has been found that the stream
+model is highly suitable for many applications that process
+very large data sets, in the order of terabytes or even larger.
+These include applications such as financial trading
+systems~\cite{agarwal2009faster},
+database systems~\cite{Golab03datastream},
+network data analysis~\cite{Gilbert01quicksand:quick,Sullivan:1998:TSM:1268256.1268258} are few examples that follow the streaming model and operate on very large data sets.
+
+Stream processing is highly suited to multicore and parallel
+computing, because the filters can typically execute in parallel.
+Smaller stream applications often achieve high levels of parallelism
+on multicore machines.  However, as the stream processing model
+is used to address larger data processing problems, more computational
+resources are needed, and a common solution is to distribute the
+filters across a number of machines.
+In such cases the applications are typically limited by the
+traditional communication
+~\cite{Wu:2007:PPB:1323954.1323957,Wu:2007:PAL:1227865.1228021,Dobrescu09routebricks:exploiting,Han:2010:PGS:1851275.1851207,Kohler2000}.
+The reason being these systems have limited support for operating on
+parallel streams and are burdened by abstraction layers that provide
+compatibility for non-streaming applications.
 
 Several high speed networks~\cite{fredj2011survey} exists that could handle such communication requirements but these require expensive hardware and specialized programming skills. Commodity network adapters based on 10-gigabit ethernet (10GbE) are comparatively cheaper alternative and are being widely deployed in clusters and grids in data centers. Previous research\cite{Romanow03anoverview,Feng:2003:OEN:1048935.1050200} have been done on optimizing ethernet for improving communication in such cases. However, they do not use many of the features provided by modern day network adapters such as hardware queues, flow control, etc., Also, they do not focus specifically on streaming applications and hence making it difficult to utilize them properly.
 
